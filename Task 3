@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
+// Constants
+const int NUM_ROWS = 5;
+const int NUM_COLS = 10;
+const double TICKET_PRICE = 10.0;
+
+// Function to display the seating arrangement
+void displaySeats(vector<vector<char>>& seats) {
+    cout << "  ";
+    for (int col = 0; col < NUM_COLS; col++) {
+        cout << setw(3) << col + 1;
+    }
+    cout << "\n";
+
+    for (int row = 0; row < NUM_ROWS; row++) {
+        cout << char('A' + row) << " ";
+        for (int col = 0; col < NUM_COLS; col++) {
+            cout << setw(3) << seats[row][col];
+        }
+        cout << "\n";
+    }
+}
+
+// Function to check if a seat is available
+bool isSeatAvailable(vector<vector<char>>& seats, int row, int col) {
+    return seats[row][col] == 'X';
+}
+
+// Function to book a seat
+void bookSeat(vector<vector<char>>& seats, int row, int col) {
+    seats[row][col] = 'O';
+}
+
+// Function to calculate the total cost
+double calculateTotalCost(int numTickets) {
+    return numTickets * TICKET_PRICE;
+}
+
+int main() {
+    vector<vector<char>> seats(NUM_ROWS, vector<char>(NUM_COLS, 'X'));
+    int totalSeats = NUM_ROWS * NUM_COLS;
+
+    cout << "Welcome to the Movie Ticket Booking System!\n";
+    cout << "Available seats are marked with 'X'.\n";
+
+    while (true) {
+        cout << "\nMenu:\n";
+        cout << "1. View Movie Listings\n";
+        cout << "2. Book a Ticket\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice: ";
+
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "\nMovie Listings:\n";
+                // Display movie listings here
+                break;
+            case 2:
+                cout << "\nBooking a Ticket:\n";
+                displaySeats(seats);
+
+                cout << "Enter the row (A-E) and seat number (1-10) to book a ticket: ";
+                char row;
+                int col;
+                cin >> row >> col;
+                row = toupper(row);
+                col--;
+
+                if (row >= 'A' && row <= 'E' && col >= 0 && col < NUM_COLS) {
+                    if (isSeatAvailable(seats, row - 'A', col)) {
+                        bookSeat(seats, row - 'A', col);
+                        cout << "Ticket booked successfully!\n";
+                        totalSeats--;
+                    } else {
+                        cout << "Sorry, the seat is already booked. Please choose another seat.\n";
+                    }
+                } else {
+                    cout << "Invalid row or seat number. Please try again.\n";
+                }
+                break;
+            case 3:
+                cout << "Thank you for using the Movie Ticket Booking System!\n";
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+                break;
+        }
+
+        cout << "Remaining available seats: " << totalSeats << "\n";
+    }
+
+    return 0;
+}
